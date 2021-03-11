@@ -11,12 +11,12 @@ filepath = 'C:/temp/full_pipeline/'
 ### Set the conditions and some parameters
 # Conditions matrix
 nominal_strain_rates  = [0.1]   # per second
-nominal_temps         = [490]   # degrees C
+nominal_temps         = [520]   # degrees C
 
 # These are for the output of the model, refine the strain step for a higher
 # resolution iutput for the model.
-max_strain  = 0.65
-strain_step = 0.05
+max_strain  = 0.5
+strain_step = 0.1
 
 # Conductance, This is a key parameter and may need adjusting to fit the 
 # temperature field, this value was correct for Al6082.50
@@ -56,9 +56,9 @@ os.system('call abaqus cae nogui=deformation_step.py')
     
 # Plot the output
 # This will generate plots from the experiment and the output of the model to compare to of:
-# The central thermocouple temperature vs time
-# The secondary thermocouple temperature vs time
-# The stress-strain curve
+# - The central thermocouple temperature vs time
+# - The secondary thermocouple temperature vs time
+# - The stress-strain curve
 plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,
             max_strain,sample_length,sample_radius)
 
