@@ -1,6 +1,6 @@
 # dilatometer_modelling_and_constitutive_behaviour
 
-This program contains a method of testing various constitutive models and extracting the constitutive behaviour of dilatometer sample correcting for inhomogeneities (i.e. sample barrelling and friction). 
+This program contains a method of testing various constitutive models and extracting the constitutive behaviour of dilatometer sample correcting for inhomogeneities (i.e. sample barrelling and friction). The model is currently configured to a dilatometer run under vacuum with no active cooling during the deformation. For both heatup and deformation the temperature is fitted to the recorded central themocoupole temperature for any general temperature profile. The output then allows the dilatometer behaviour to be corrected to compensate for the inhomogeneities via the method set out in the following paper that can be found [here](https://www.sciencedirect.com/science/article/pii/S1005030220309257). If you have any issues or questions please feel free to contact me via email at [ih345@cam.ac.uk](ih345@cam.ac.uk).
 
 ## Intallation
 **IMPORTANT**: Due to the 80 character limit in abaqus this must be executed from temp directory. 
@@ -12,8 +12,13 @@ The full model with a high resolution in the steps can take some time to run, on
 
 ## Running
 
+### Adding experimental data
+* Add the dilatometer .ACS files to the folder with the structure shown in the filestructure section. The naming convention of the .ACS files is not relevant here and does not need to be consistent. 
+
 ### Changes to the code
 * Change the filepath in the 'run_heatup' and 'run_deformation' to the current path with the folder name
+* All variables can currently be changed except the sample dimensions in the 'run_deformation' and 'run_heatup' functions. One **important** factor is the conductance which dictates the conductance between the sample and the platens. Literature values of this parameter are scarce so this may require some testing and optimising. 
+* The consitiutive law is currently set up to be the Sellars-Tegart law, this can be changed by editing the 'constitutive_law.py' file in the functions folder. The model is currently set up such that the consitiutive law is strain independent. 
 
 ### Changes to the CAE file
 For a material that is not 6082.50 Aluminum editing will be required to the 'dilatometer_model.cae' file. For a new material the following changes will have to be made:
@@ -21,6 +26,14 @@ For a material that is not 6082.50 Aluminum editing will be required to the 'dil
 * Elastic modulus, Possions ratio
 * Specific heat
 * Thermal conductivity
+
+### Executing the model
+The model is run in two steps. 
+1. Initially the starting temperature field for the deformation is generated via running the 'run_deformation.py' file. This has no post-processing.
+2. Running the deformation model for a matrix of conditions with 'run_deformation.py'. This has three steps:
+ 1. Set up and run the ABAQUS deformation model to get ouputs.
+ 2. Generate plots.
+ 3. Generate the corrected consitiutive data.
 
 ## Ouputs
 
@@ -45,6 +58,21 @@ average behaviour. This is done via a binning method in strain  which combines a
   * T0    - The temperature at the middle thermocouple / Degrees C
   * T4    - The temperature at the off centre thermocouple at 4 mm from the centre / degrees C
 
+## Functions and definitions
+### Main functions
+* **'run_deformation.py'**:
+* **'run_heatup.py'**:
+* **'deformation_step.py'**:
+* **'heatup_step.py'**:
+### Subfunctions
+* **'constitutive_law.py'**:
+* **'extract_experimental_constitutive_data.py'**:
+* **'extract_model_output.py'**:
+* **'generate_deformation_input.py'**:
+* **'generate_heatup_input.py'**:
+* **'generate_setup.py'**:
+* **'plot_output.py'**:
+
 ## Filestructure
 ├── deformation_step<br/>
 │   ├── deformation_input #(input .txt files to transfer data to the ABAQUS deformation model)<br/>
@@ -56,7 +84,7 @@ average behaviour. This is done via a binning method in strain  which combines a
 │   └── final_heatup_odb #(Location of the final temperature distribution in the ABAQUS heatup model)<br/>
 │ <br/>
 ├── experimental_data<br/>
-│   ├── deformation #(Folder containing the .ACS files from the dilatometer for the deformation region, the naming convention of the .ACS files is not relevant here)<br/>
+│   ├── deformation #(Folder containing the .ACS files from the dilatometer for the deformation region)<br/>
 │   │   ├── Nominal strain rate 1<br/>
 │   │   │   ├── Nominal temperature 1<br/>
 │   │   │   ├── Nominal temperature 2<br/>
@@ -68,7 +96,7 @@ average behaviour. This is done via a binning method in strain  which combines a
 │   │   │   <br/>
 │   │   ├── ... <br/>
 │   │ <br/>
-│   └── full #(Folder containing the .ACS files from the dilatometer for the full region, the naming convention of the .ACS files is not relevant here)<br/>
+│   └── full #(Folder containing the .ACS files from the dilatometer for the full region)<br/>
 │   │   ├── Nominal strain rate 1<br/>
 │   │   │   ├── Nominal temperature 1<br/>
 │   │   │   ├── Nominal temperature 2<br/>
