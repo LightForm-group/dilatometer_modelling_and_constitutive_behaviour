@@ -91,7 +91,7 @@ for Temp in Temps_nominal:
     Power_history = []
     Power_history.append(0)
         
-    for J in range(1,3):#len(P_hist)): 
+    for J in range(1,len(P_hist)): 
         
         with open(filepath+'Diagnostic_' + Temp + 'C.txt', "a") as myfile: #### Diagnostic
             myfile.write('\nJ: ' + str(J) +"\n") 

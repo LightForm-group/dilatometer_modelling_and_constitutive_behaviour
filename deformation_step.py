@@ -196,7 +196,7 @@ for Strain_rate_nominal in Strain_rates_nominal:
         
         # J is the Jth step along the displacment history 
         # For each step in the power profile 
-        for J in range(1,3):#len(Disp_hist)):
+        for J in range(1,len(Disp_hist)):
             
             # Set the time increment to define the rectangular profile between two time points
             time_increment = (time[J+1]-time[J])/5
