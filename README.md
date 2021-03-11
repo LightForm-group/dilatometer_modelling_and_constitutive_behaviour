@@ -32,8 +32,8 @@ The model is run in two steps.
 1. Initially the starting temperature field for the deformation is generated via running the `run_heatup.py` file. This has no post-processing.
 1. Running the deformation model for a matrix of conditions with `run_deformation.py`. This has three steps:
  1. Set up and run the ABAQUS deformation model to get ouputs.
- 1. Generate plots.
- 1. Generate the corrected consitiutive data.
+ 1. Generating plots.
+ 1. Generating the corrected consitiutive data.
 
 ## Ouputs
 
@@ -60,18 +60,18 @@ average behaviour. This is done via a binning method in strain  which combines a
 
 ## Functions and definitions
 ### Main functions
-* `run_deformation.py`:
-* `run_heatup.py`:
-* `deformation_step.py`:
-* `heatup_step.py`:
+* `run_deformation.py`
+* `run_heatup.py`
+* `deformation_step.py`
+* `heatup_step.py`
 ### Subfunctions
-* `constitutive_law.py`:
-* `extract_experimental_constitutive_data.py`:
-* `extract_model_output.py`:
-* `generate_deformation_input.py`:
-* `generate_heatup_input.py`:
-* `generate_setup.py`:
-* `plot_output.py`:
+* `constitutive_law.py`
+* `extract_experimental_constitutive_data.py`
+* `extract_model_output.py`
+* `generate_deformation_input.py`
+* `generate_heatup_input.py`
+* `generate_setup.py`
+* `plot_output.py`
 
 ## Filestructure
 ├── deformation_step<br/>
