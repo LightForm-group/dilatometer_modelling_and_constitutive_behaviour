@@ -9,23 +9,18 @@ import os
 filepath = 'C:/temp/full_pipeline/'
 
 ### Set the conditions and some parameters
-# Conditions matrix
+# Conditions matrix - input all the nominal strain rates and tempratures used
 nominal_strain_rates  = [0.1]   # per second
 nominal_temps         = [520]   # degrees C
 
 # These are for the output of the model, refine the strain step for a higher
-# resolution iutput for the model.
+# resolution iutput in the model.
 max_strain  = 0.5
 strain_step = 0.1
 
 # Conductance, This is a key parameter and may need adjusting to fit the 
 # temperature field, this value was correct for Al6082.50
 conductance = 10000.0
-
-# Sample information - The model mesh is currently set up with these parameters
-# so these cannot be changed. 
-sample_length = 10*10**(-3) # m
-sample_radius = 2.5*10**(-3) # m
 
 # Modified Sellars Tegart parameters for the equation in the form
 # sigma = sigmaR*(arcsinh(strain_rate*exp(Q/(R*T))/A)) + sigmaP
@@ -38,6 +33,11 @@ n       = 5.0
 sigma_R = 20
 sigma_P = 5
 constitutive_inputs = [Q,A,n,sigma_R,sigma_P]
+
+# Sample information - The model mesh is currently set up with these parameters
+# so these cannot be changed. 
+sample_length = 10*10**(-3) # m
+sample_radius = 2.5*10**(-3) # m
 
 # Produce the input files with the experimental data
 use_custom_inputs = 0 # Set to 1 to use custom inputs
