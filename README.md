@@ -4,7 +4,7 @@ This program contains a method of testing various constitutive models and extrac
 
 ## Intallation
 **IMPORTANT**: Due to the 80 character limit in abaqus this must be executed from temp directory. 
-**Requiments**: 'ABAQUS', 'numpy', 'seaborn', 'pickle', 'matplotlib', and 'math'  
+**Requiments**: 'ABAQUS', 'numpy', 'seaborn', 'pickle', 'matplotlib', and 'math'.
 **Using your data**: To use your own data you must place the outputted .ACS files from the dilatometer into the filestructure shown below. further changes you may need to make are outlined in the running the model section. 
 
 ## Testing
@@ -65,13 +65,13 @@ average behaviour. This is done via a binning method in strain  which combines a
 * **'deformation_step.py'**:
 * **'heatup_step.py'**:
 ### Subfunctions
-* **'constitutive_law.py'**:
-* **'extract_experimental_constitutive_data.py'**:
-* **'extract_model_output.py'**:
-* **'generate_deformation_input.py'**:
-* **'generate_heatup_input.py'**:
-* **'generate_setup.py'**:
-* **'plot_output.py'**:
+* 'constitutive_law.py':
+* 'extract_experimental_constitutive_data.py':
+* 'extract_model_output.py':
+* 'generate_deformation_input.py':
+* 'generate_heatup_input.py':
+* 'generate_setup.py':
+* 'plot_output.py':
 
 ## Filestructure
 ├── deformation_step<br/>
