@@ -219,7 +219,7 @@ for Temp in Temps_nominal:
                 memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, 
                 explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
                 modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
-                scratch='', multiprocessingMode=DEFAULT, numCpus=8, numDomains=8)
+                scratch='', multiprocessingMode=DEFAULT, numCpus=4, numDomains=4)
             
             Job = mdb.jobs[Job_name_up]
             Job.submit(consistencyChecking=OFF)
