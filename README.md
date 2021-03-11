@@ -11,40 +11,41 @@ This program contains a method of testing various constitutive models and extrac
 The full model with a high resolution in the steps can take some time to run, on a normal laptop each condition takes approximatly 30 minutes. To test the deformation model run 'run_deformaion' with the provided data and settings. 
 
 ## Filestructure
-├── deformation_step
-│   ├── deformation_input # input .txt files to transfer data to the ABAQUS deformation model
-│   └── deformation_output # outputted .txt files from the ABAQUS deformation model
-│ 
+├── deformation_step<br/>
+│   ├── deformation_input # input .txt files to transfer data to the ABAQUS deformation model<br/>
+│   └── deformation_output # outputted .txt files from the ABAQUS deformation model<br/>
+│ <br/>
 ├── heatup_step
-│   ├── heatup_input # input .txt files to transfer data to the ABAQUS heatup model
-│   ├── heatup_output # outputted .txt files from the ABAQUS heatup model
-│   └── final_heatup_odb # Location of the final temperature distribution in the ABAQUS heatup model
-│ 
-├── experimental_data
-│   ├── deformation # Folder containing the .ACS files from the dilatometer for the deformation region, the naming convention of the .ACS files is not relevant here
-│   │   ├── Nominal strain rate 1
-│   │   │   ├── Nominal temperature 1
-│   │   │   ├── Nominal temperature 2
-│   │   │   ├── ...
-│   │   ├── Nominal strain rate 2
-│   │   │   ├── Nominal temperature 1
-│   │   │   ├── Nominal temperature 2
-│   │   │   ├── ...
-│   │   ├── ... 
-│   │ 
-│   └── full # Folder containing the .ACS files from the dilatometer for the full region, the naming convention of the .ACS files is not relevant here
-│   │   ├── Nominal strain rate 1
-│   │   │   ├── Nominal temperature 1
-│   │   │   ├── Nominal temperature 2
-│   │   │   ├── ...
-│   │   ├── Nominal strain rate 2
-│   │   │   ├── Nominal temperature 1
-│   │   │   ├── Nominal temperature 2
-│   │   │   ├── ...
-│   │   ├── ... 
-│   │ 
-│   ├── experimental_output # .txt files conataining the processed data from the deformation step
-│ 
-├── functions # Various .py functions used in the program
-│ 
-├── plots # Outputted plots in both .png and pickle format 
+│   ├── heatup_input # input .txt files to transfer data to the ABAQUS heatup model<br/>
+│   ├── heatup_output # outputted .txt files from the ABAQUS heatup model<br/>
+│   └── final_heatup_odb # Location of the final temperature distribution in the ABAQUS heatup model<br/>
+│ <br/>
+├── experimental_data<br/>
+│   ├── deformation # Folder containing the .ACS files from the dilatometer for the deformation region, the naming convention of the .ACS files is not relevant here<br/>
+│   │   ├── Nominal strain rate 1<br/>
+│   │   │   ├── Nominal temperature 1<br/>
+│   │   │   ├── Nominal temperature 2<br/>
+│   │   │   ├── ...<br/>
+│   │   ├── Nominal strain rate 2<br/>
+│   │   │   ├── Nominal temperature 1<br/>
+│   │   │   ├── Nominal temperature 2<br/>
+│   │   │   ├── ...<br/>
+│   │   ├── ... <br/>
+│   │ <br/>
+│   └── full # Folder containing the .ACS files from the dilatometer for the full region, the naming convention of the .ACS files is not relevant here<br/>
+│   │   ├── Nominal strain rate 1<br/>
+│   │   │   ├── Nominal temperature 1<br/>
+│   │   │   ├── Nominal temperature 2<br/>
+│   │   │   ├── ...<br/>
+│   │   │   <br/>
+│   │   ├── Nominal strain rate 2<br/>
+│   │   │   ├── Nominal temperature 1<br/>
+│   │   │   ├── Nominal temperature 2<br/>
+│   │   │   ├── ...<br/>
+│   │   ├── ... <br/>
+│   │ <br/>
+│   ├── experimental_output # .txt files conataining the processed data from the deformation step<br/>
+│ <br/>
+├── functions # Various .py functions used in the program<br/>
+│ <br/>
+└── plots # Outputted plots in both .png and pickle format <br/>
