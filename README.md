@@ -10,6 +10,41 @@ This program contains a method of testing various constitutive models and extrac
 ## Testing
 The full model with a high resolution in the steps can take some time to run, on a normal laptop each condition takes approximatly 30 minutes. To test the deformation model run 'run_deformaion' with the provided data and settings. 
 
+## Running
+
+### Changes to the code
+* Change the filepath in the 'run_heatup' and 'run_deformation' to the current path with the folder name
+
+### Changes to the CAE file
+For a material that is not 6082.50 Aluminum editing will be required to the 'dilatometer_model.cae' file. For a new material the following changes will have to be made:
+* Density
+* Elastic modulus, Possions ratio
+* Specific heat
+* Thermal conductivity
+
+## Ouputs
+
+### Experimental ouput: 
+The code will combine repeated experiments to find an
+average behaviour. This is done via a binning method in strain  which combines all values within a 0.01 strain increment. The errors are the errors that occour due to the averaging during the binning and averaging of the data at each condition. The three outputs that are generated from the experimental data are:
+
+* experimental_output_all_data.txt - This uses the bining method then stacks all the conditions. It has the following format:
+  * stress, strain, strain rate, real temp, nom temp, err(stress), err(stress), err(strain), err(strain rate), err(real temp), err(nom temp)    
+* experimental_output_interp_stack_temp.txt - This performes interpolation onthe experimental_output_all_data dataset at each condition to return outputsat the specified strains for temps. It has the following format:
+  * Real Temp, Strains, strain rate, nominal temp, err(Real Temp), err(Strains), err(strain rate), err(nominal temp)
+* experimental_output_interp_stack_stress.txt - This performes interpolation onthe experimental_output_all_data dataset at each condition to return outputsat the specified strains for stresses. It has the following format:
+  * Stress, Strains, strain rate, nominal temp, err(Stress), err(Strains), err(strain rate), err(nominal temp)
+
+### Model ouputs:
+* Plots: Plots will be created in the plots folder. There are two versions. one is in the .png format and can't be edited and one is in the pickle format. the pickle format can be loaded back into anoher script as a fig which can then beedited with further python scripting.
+* Data: These are placed in the deformation_step/deformation_output folder. The values have the following meaning:
+  * ALLPD - The power per unit volume for the plastic disipation 
+  * d     - The displacment of the platens / (m)
+  * F     - The force required to deform the material / (N)
+  * P     - The power needed from the induction heating 
+  * T0    - The temperature at the middle thermocouple / Degrees C
+  * T4    - The temperature at the off centre thermocouple at 4 mm from the centre / degrees C
+
 ## Filestructure
 ├── deformation_step<br/>
 │   ├── deformation_input #(input .txt files to transfer data to the ABAQUS deformation model)<br/>
