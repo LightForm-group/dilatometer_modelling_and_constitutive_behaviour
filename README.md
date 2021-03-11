@@ -8,7 +8,7 @@ This program contains a method of testing various constitutive models and extrac
 **Using your data**: To use your own data you must place the outputted .ACS files from the dilatometer into the filestructure shown below. further changes you may need to make are outlined in the running the model section. 
 
 ## Testing
-The full model with a high resolution in the steps can take some time to run, on a normal laptop each condition takes approximatly 30 minutes. To test the deformation model run 'run_deformaion' with the provided data and settings. 
+The full model with a high resolution in the steps can take some time to run, on a normal laptop each condition takes approximatly 30 minutes. To test the deformation model run `run_deformaion` with the provided data and settings.
 
 ## Running
 
