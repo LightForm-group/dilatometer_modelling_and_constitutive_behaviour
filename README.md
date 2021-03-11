@@ -78,7 +78,7 @@ average behaviour. This is done via a binning method in strain  which combines a
 │   ├── deformation_input #(input .txt files to transfer data to the ABAQUS deformation model)<br/>
 │   └── deformation_output #(outputted .txt files from the ABAQUS deformation model)<br/>
 │ <br/>
-├── heatup_step
+├── heatup_step<br/>
 │   ├── heatup_input #(input .txt files to transfer data to the ABAQUS heatup model)<br/>
 │   ├── heatup_output #(outputted .txt files from the ABAQUS heatup model)<br/>
 │   └── final_heatup_odb #(Location of the final temperature distribution in the ABAQUS heatup model)<br/>
