@@ -3,8 +3,8 @@
 This program contains a method of testing various constitutive models and extracting the constitutive behaviour of dilatometer sample correcting for inhomogeneities (i.e. sample barrelling and friction). The model is currently configured to a dilatometer run under vacuum with no active cooling during the deformation. For both heatup and deformation the temperature is fitted to the recorded central themocoupole temperature for any general temperature profile. The output then allows the dilatometer behaviour to be corrected to compensate for the inhomogeneities via the method set out in the following paper that can be found [here](https://www.sciencedirect.com/science/article/pii/S1005030220309257). If you have any issues or questions please feel free to contact me via email at [ih345@cam.ac.uk](ih345@cam.ac.uk).
 
 ## Intallation
-**IMPORTANT**: Due to the 80 character limit in abaqus this must be executed from temp directory. 
-**Requiments**: 'ABAQUS', 'numpy', 'seaborn', 'pickle', 'matplotlib', and 'math'.
+**IMPORTANT**: Due to the 80 character limit in abaqus this must be executed from temp directory.<br/>
+**Requiments**: 'ABAQUS', 'numpy', 'seaborn', 'pickle', 'matplotlib', and 'math'.<br/>
 **Using your data**: To use your own data you must place the outputted .ACS files from the dilatometer into the filestructure shown below. further changes you may need to make are outlined in the running the model section. 
 
 ## Testing
@@ -30,10 +30,10 @@ For a material that is not 6082.50 Aluminum editing will be required to the 'dil
 ### Executing the model
 The model is run in two steps. 
 1. Initially the starting temperature field for the deformation is generated via running the 'run_deformation.py' file. This has no post-processing.
-2. Running the deformation model for a matrix of conditions with 'run_deformation.py'. This has three steps:
+1. Running the deformation model for a matrix of conditions with 'run_deformation.py'. This has three steps:
  1. Set up and run the ABAQUS deformation model to get ouputs.
- 2. Generate plots.
- 3. Generate the corrected consitiutive data.
+ 1. Generate plots.
+ 1. Generate the corrected consitiutive data.
 
 ## Ouputs
 
