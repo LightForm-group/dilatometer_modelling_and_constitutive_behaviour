@@ -12,16 +12,16 @@ The full model with a high resolution in the steps can take some time to run, on
 
 ## Filestructure
 ├── deformation_step<br/>
-│   ├── deformation_input # input .txt files to transfer data to the ABAQUS deformation model<br/>
-│   └── deformation_output # outputted .txt files from the ABAQUS deformation model<br/>
+│   ├── deformation_input #(input .txt files to transfer data to the ABAQUS deformation model)<br/>
+│   └── deformation_output #(outputted .txt files from the ABAQUS deformation model)<br/>
 │ <br/>
 ├── heatup_step
-│   ├── heatup_input # input .txt files to transfer data to the ABAQUS heatup model<br/>
-│   ├── heatup_output # outputted .txt files from the ABAQUS heatup model<br/>
-│   └── final_heatup_odb # Location of the final temperature distribution in the ABAQUS heatup model<br/>
+│   ├── heatup_input #(input .txt files to transfer data to the ABAQUS heatup model)<br/>
+│   ├── heatup_output #(outputted .txt files from the ABAQUS heatup model)<br/>
+│   └── final_heatup_odb #(Location of the final temperature distribution in the ABAQUS heatup model)<br/>
 │ <br/>
 ├── experimental_data<br/>
-│   ├── deformation # Folder containing the .ACS files from the dilatometer for the deformation region, the naming convention of the .ACS files is not relevant here<br/>
+│   ├── deformation #(Folder containing the .ACS files from the dilatometer for the deformation region, the naming convention of the .ACS files is not relevant here)<br/>
 │   │   ├── Nominal strain rate 1<br/>
 │   │   │   ├── Nominal temperature 1<br/>
 │   │   │   ├── Nominal temperature 2<br/>
@@ -30,9 +30,10 @@ The full model with a high resolution in the steps can take some time to run, on
 │   │   │   ├── Nominal temperature 1<br/>
 │   │   │   ├── Nominal temperature 2<br/>
 │   │   │   ├── ...<br/>
+│   │   │   <br/>
 │   │   ├── ... <br/>
 │   │ <br/>
-│   └── full # Folder containing the .ACS files from the dilatometer for the full region, the naming convention of the .ACS files is not relevant here<br/>
+│   └── full #(Folder containing the .ACS files from the dilatometer for the full region, the naming convention of the .ACS files is not relevant here)<br/>
 │   │   ├── Nominal strain rate 1<br/>
 │   │   │   ├── Nominal temperature 1<br/>
 │   │   │   ├── Nominal temperature 2<br/>
@@ -42,10 +43,11 @@ The full model with a high resolution in the steps can take some time to run, on
 │   │   │   ├── Nominal temperature 1<br/>
 │   │   │   ├── Nominal temperature 2<br/>
 │   │   │   ├── ...<br/>
+│   │   │   <br/>
 │   │   ├── ... <br/>
 │   │ <br/>
-│   ├── experimental_output # .txt files conataining the processed data from the deformation step<br/>
+│   ├── experimental_output #(.txt files conataining the processed data from the deformation step)<br/>
 │ <br/>
-├── functions # Various .py functions used in the program<br/>
+├── functions #(Various .py functions used in the program)<br/>
 │ <br/>
-└── plots # Outputted plots in both .png and pickle format <br/>
+└── plots #(Outputted plots in both .png and pickle format)<br/>
