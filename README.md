@@ -16,43 +16,47 @@ To model a dilatometer run with a different material There are a number of steps
 1. **Organising dilatometer data**:
     1. The .ASC dilatometer data files need to be in the following format with 3 header lines:  No., Time, Tem.1, DL, Force, Strain, kf (Def.), Phi  (D), Phi* (D), Tem.2, Tem.3, Poti, HF. 
     2. Organise the data by nominal deformation strain rate and temperature seperating the .ASC deformation files from the files with the full profile. Put the files into the sturture shown in the filestructure section below. The naming convention of the .ACS files is not relevant here and does not need to be consistent. The code will average the behaviour of repeats which may produce some unrepresentitive behaviour so check which files you include. 
+
 2. **Adding material behaviour to the CAE ABAQUS model:**
     1. For a material that is not 6082.50 Aluminum editing will be required to the `dilatometer_model.cae` file. For a new material the material `material` must be edited to have the correct properties, these should be temperature dependent:
         1. Density
         2. Elastic modulus, Possions ratio
         3. Specific heat
         4. Thermal conductivity
+
 3. **Changing dilatometer parameters in the model:**
     1. This will be required if any of the conditions used differ from the following: Al2O3 platens, He cooling turned off during deformation, test conducted in a vacuum, non-standard size sample.
         1.  Non-Al2O3 platens: Navigate to the materials in the `dilatometer_model.cae` file and edit the material `Al2O3` to have the properties that match the platens used.
         2.  He cooling used during deformation: This section has not been added to the code yet but is present in the ABAQUS model. You can add He cooling by editing the cool amplitude. A future version will include an option to have this fitted similar to the induction power. 
         3.  Test not conducted in a vacuum: This will require going to the `heatup_step.py` and `deformation_step.py` files and editing the film_coeff parameter in the program definitions, this may require optimisation. 
         4.  Non-standard size sample: The model is not currently set up to have non standard (10mmx5mm) samples. A future version may include this.
+
 4. **Seting up the program inputs:**
     1. Naviagte to the `run_heatup.py` and `run_deformation.py` files and edit the nominal conditions matrix and change the filepath to the filepath you are using, change the max strain to the max true strain during deformation, choose a strain step at which values will be fitted and read out (a small value will really slow down your code). 
-5. **Sensitivity studies:**
-    1. There are a number of parameters
+    2. If during deformation you do not wish to use the automatically generated input files from the dilatometer data set `use_custom_inputs` in `run_deformation.py` to 1. This will require you to generate the input txt files for deformation yourself. 
+    3. For the heatup step the input files must be manually created. The following files must be created and placed in the `heatup_step/heatup_input` folder:
+        1. Power - This is a list of numbers that will be adjusted by the model and can be any non zero value (commonly arounf 1e8)
+        2. Temp  - A list of the target temperatures for each time in degrees C
+        3. times - A list of the times at which the power will be fitted to match the desired temperatures
+       These files have the following format for each nominal temperature:
+        1. Power - P_heatup_(nominal_temp)C.txt
+        2. time  - t_heatup_(nominal_temp)C.txt
+        3. Temp  - Temp_heatup_(nominal_temp)C.txt
 
+5. **Changing the consitiutive law**:
+    1. The constitutive law can be changed to take in any number of inputs, the form of the law can be changed by navigating to `functions/constitutive_law.py`. The law is currently set up such that it cannot be strain dependent. 
 
-### Changes to the code
-* Change the filepath in the `run_heatup` and `run_deformation` to the current path.
-* All variables can currently be changed except the sample dimensions in the `run_deformation` and `run_heatup` functions. One **important** factor is the conductance which dictates the conductance between the sample and the platens. Literature values of this parameter are scarce so this may require some testing and optimising. 
-* The consitiutive law is currently set up to be the Sellars-Tegart law, this can be changed by editing the 'constitutive_law.py' file in the functions folder. The model is currently set up such that the consitiutive law is strain independent. 
+6. **Sensitivity studies and parameter optimisation:**
+    1. There are a number of parameters in the model that may require optimisation, one **important** factor is the conductance which dictates the conductance between the sample and the platens. Literature values of this parameter are scarce so this may require some testing and optimising. The value may also vary between heatup and deformation. It's magnitude will dictate the temperature gradient across the sample. If the model is not capturing the temperature field or is unable to cool fast enough the conductance value can be edited in the `run_heatup.py` and `run_deformation.py` files. It is best to run this optimisation on just a few conditions in order to save time. 
+    2. Other parameters that may require optimisation include the `film_coeff` parameter founf in the run files and the friction coefficent between the sample and platens found in the CAE file. 
 
-### Changes to the CAE file
-For a material that is not 6082.50 Aluminum editing will be required to the `dilatometer_model.cae` file. For a new material the following changes will have to be made:
-* Density
-* Elastic modulus, Possions ratio
-* Specific heat
-* Thermal conductivity
-
-### Executing the model
-The model is run in two steps. 
-1. Initially the starting temperature field for the deformation is generated via running the `run_heatup.py` file. This has no post-processing.
-2. Running the deformation model for a matrix of conditions with `run_deformation.py`. This has three steps:
-    2.1. Set up and run the ABAQUS deformation model to get ouputs.
-    2.2. Generating plots.
-    2.3. Generating the corrected consitiutive data.
+7. **Executing the model:**
+    1. Once the previous steps have been completed the model should be ready to run. The program has the following steps:
+        1. Initially the starting temperature field for the deformation is generated via running the `run_heatup.py` file. This has no post-processing.
+        2. Running the deformation model for a matrix of conditions with `run_deformation.py`. This has three steps:
+            1. Setting up and running the ABAQUS deformation model to generate ouputs.
+            2. Generating plots.
+            3. Generating the corrected consitiutive data.
 
 ## Ouputs
 
@@ -68,8 +72,8 @@ average behaviour. This is done via a binning method in strain  which combines a
   * Stress, Strains, strain rate, nominal temp, err(Stress), err(Strains), err(strain rate), err(nominal temp)
 
 ### Model ouputs:
-* Plots: Plots will be created in the plots folder. There are two versions. one is in the .png format and can't be edited and one is in the pickle format. the pickle format can be loaded back into anoher script as a fig which can then beedited with further python scripting.
-* Data: These are placed in the deformation_step/deformation_output folder. The values have the following meaning:
+* Plots: Plots will be created in the `plots` folder. There are two versions. one is in the .png format and can't be edited and one is in the pickle format. the pickle format can be loaded back into anoher script as a fig which can then beedited with further python scripting.
+* Data: These are placed in the `deformation_step/deformation_output` folder. The values have the following meaning:
   * ALLPD - The power per unit volume for the plastic disipation 
   * d     - The displacment of the platens / (m)
   * F     - The force required to deform the material / (N)
