@@ -7,7 +7,7 @@ This program contains a method of testing various constitutive models and extrac
 **Requiments**: `ABAQUS`, `numpy`, `seaborn`, `pickle`, `matplotlib`, and `math`.<br/>
 
 ## Testing
-The full model with a high resolution in the steps can take some time to run, on a normal laptop each condition takes approximatly 30 minutes. To test the deformation model run `run_deformaion` with the provided data and settings.
+The full model with a high true strain step resolution can take some time to run, on a normal laptop each condition takes approximatly 30 minutes. To test the deformation model run `run_deformaion` with the provided data and settings.
 
 ## Running
 
