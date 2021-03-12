@@ -35,13 +35,9 @@ To model a dilatometer run with a different material There are a number of steps
     1. Naviagte to the `run_heatup.py` and `run_deformation.py` files and edit the nominal conditions matrix and change the filepath to the filepath you are using, change the max strain to the max true strain during deformation, choose a strain step at which values will be fitted and read out (a small value will really slow down your code). 
     2. If during deformation you do not wish to use the automatically generated input files from the dilatometer data set `use_custom_inputs` in `run_deformation.py` to 1. This will require you to generate the input txt files for deformation yourself. 
     3. For the heatup step the input files must be manually created. The following files must be created and placed in the `heatup_step/heatup_input` folder:
-        1. Power - This is a list of numbers that will be adjusted by the model and can be any non zero value (commonly arounf 1e8)
-        2. Temp  - A list of the target temperatures for each time in degrees C
-        3. times - A list of the times at which the power will be fitted to match the desired temperatures
-       These files have the following format for each nominal temperature:
-        1. Power - P_heatup_(nominal_temp)C.txt
-        2. time  - t_heatup_(nominal_temp)C.txt
-        3. Temp  - Temp_heatup_(nominal_temp)C.txt
+        1. Power - This is a list of numbers that will be adjusted by the model and can be any non zero value (commonly arounf 1e8) in the format P_heatup_(nominal_temp)C.txt
+        2. Temp  - A list of the target temperatures for each time in degrees C in the format Temp_heatup_(nominal_temp)C.txt
+        3. times - A list of the times at which the power will be fitted to match the desired temperatures in the format t_heatup_(nominal_temp)C.txt
 
 5. **Changing the consitiutive law**:
     1. The constitutive law can be changed to take in any number of inputs, the form of the law can be changed by navigating to `functions/constitutive_law.py`. The law is currently set up such that it cannot be strain dependent. 
