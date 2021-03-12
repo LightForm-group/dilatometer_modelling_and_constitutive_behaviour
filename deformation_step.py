@@ -85,6 +85,7 @@ def generate_platic_data(constitutive_inputs,min_T,max_T,min_rate,max_rate):
 cae_filename        = 'dilatometer_model.cae'
 Target_error        = 0.5 # In degrees C
 sample_length       = 10*10**(-3) # in m
+film_coeff          = 0 # Edit this to include losses to air. 33 is a reasonable value
 
 # If running this code from the Abaqus PDE this must be set explicitly
 filepath = os.path.dirname(os.path.abspath('run_deformation.py')) + '/'
@@ -307,7 +308,7 @@ for Strain_rate_nominal in Strain_rates_nominal:
 						dependenciesC=0, clearanceDepTable=((conductance, 0.0), (0.0, 0.001)))
 			 
                 mdb.models['Model-1'].interactions['air_conductance'].setValues(
-						definition=EMBEDDED_COEFF, filmCoeff=0, filmCoeffAmplitude='', 
+						definition=EMBEDDED_COEFF, filmCoeff=film_coeff, filmCoeffAmplitude='', 
 						sinkTemperature=25.0, sinkAmplitude='')  # Set filmCoeff=0 if in vacuum
 			 
 				# Set amplitude

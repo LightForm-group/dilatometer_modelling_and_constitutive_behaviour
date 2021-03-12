@@ -38,7 +38,8 @@ filepath = os.path.dirname(os.path.abspath('heatup_step.py')) + '/'
 cae_filename = 'dilatometer_model.cae'
 
 # Minmimum allowable difference in temperature in degrees
-target_error = 0.5
+target_error = 0.5 # In degrees C
+film_coeff   = 0 # Edit this to include losses to air. 33 is a reasonable value
 
 with open (filepath+'heat_up_step/heatup_input/conductance.txt', 'r') as myfile:
     data=myfile.readlines()
@@ -182,7 +183,7 @@ for Temp in Temps_nominal:
             
             # Set air cooling cooling - currently off
             mdb.models['Model-1'].interactions['air_conductance'].setValues(
-                definition=EMBEDDED_COEFF, filmCoeff=0, filmCoeffAmplitude='',
+                definition=EMBEDDED_COEFF, filmCoeff=film_coeff, filmCoeffAmplitude='',
                 sinkTemperature=25.0, sinkAmplitude='')  
         
             # Set amplitude
