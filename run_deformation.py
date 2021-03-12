@@ -15,8 +15,8 @@ nominal_temps         = [520]   # degrees C
 
 # These are for the output of the model, refine the strain step for a higher
 # resolution iutput in the model.
-max_strain  = 0.5
-strain_step = 0.1
+max_strain  = 0.5 # largest true strain
+strain_step = 0.1 # true strain values at which output will be generated
 
 # Conductance, This is a key parameter and may need adjusting to fit the 
 # temperature field, this value was correct for Al6082.50
