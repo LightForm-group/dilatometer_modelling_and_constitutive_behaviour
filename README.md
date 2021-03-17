@@ -15,20 +15,21 @@ To model a dilatometer run with a different material There are a number of steps
 
 1. **Organising dilatometer data**:
     1. The .ASC dilatometer data files need to be in the following format with 3 header lines:  No., Time, Tem.1, DL, Force, Strain, kf (Def.), Phi  (D), Phi* (D), Tem.2, Tem.3, Poti, HF. 
-    2. Organise the data by nominal deformation strain rate and temperature seperating the .ASC deformation files from the files with the full profile. Put the files into the sturture shown in the filestructure section below. The naming convention of the .ACS files is not relevant here and does not need to be consistent. The code will average the behaviour of repeats which may produce some unrepresentitive behaviour so check which files you include. 
+    2. Organise the data by nominal deformation strain rate and temperature seperating the .ASC deformation files from the files with the full profile. Put the files into the structure shown in the filestructure section below. The naming convention of the .ACS files is not relevant here and does not need to be consistent. The code will average the behaviour of repeats which may produce some unrepresentitive behaviour so check which files you include. 
 
 2. **Adding material behaviour to the CAE ABAQUS model:**
     1. For a material that is not 6082.50 Aluminum editing will be required to the `dilatometer_model.cae` file. For a new material the material `material` must be edited to have the correct properties, these should be temperature dependent:
         1. Density
-        2. Elastic modulus, Possions ratio
-        3. Specific heat
-        4. Thermal conductivity
+        2. Elastic modulus 
+        3. Possions ratio
+        4. Specific heat
+        5. Thermal conductivity
 
 3. **Changing dilatometer parameters in the model:**
     1. This will be required if any of the conditions used differ from the following: Al2O3 platens, He cooling turned off during deformation, test conducted in a vacuum, non-standard size sample.
         1.  Non-Al2O3 platens: Navigate to the materials in the `dilatometer_model.cae` file and edit the material `Al2O3` to have the properties that match the platens used.
-        2.  He cooling used during deformation: This section has not been added to the code yet but is present in the ABAQUS model. You can add He cooling by editing the cool amplitude. A future version will include an option to have this fitted similar to the induction power. 
-        3.  Test not conducted in a vacuum: This will require going to the `heatup_step.py` and `deformation_step.py` files and editing the film_coeff parameter in the program definitions, this may require optimisation. 
+        2.  He cooling used during deformation: This section has not been added to the code yet but is present in the ABAQUS model. You can add He cooling by editing the `cool` amplitude. A future version will include an option to have this fitted similar to the induction power. 
+        3.  Test not conducted in a vacuum: This will require going to the `heatup_step.py` and `deformation_step.py` files and editing the `film_coeff` parameter in the program definitions, this may require optimisation. 
         4.  Non-standard size sample: The model is not currently set up to have non standard (10mmx5mm) samples. A future version may include this.
 
 4. **Seting up the program inputs:**
@@ -44,7 +45,7 @@ To model a dilatometer run with a different material There are a number of steps
 
 6. **Sensitivity studies and parameter optimisation:**
     1. There are a number of parameters in the model that may require optimisation, one **important** factor is the conductance which dictates the conductance between the sample and the platens. Literature values of this parameter are scarce so this may require some testing and optimising. The value may also vary between heatup and deformation. It's magnitude will dictate the temperature gradient across the sample. If the model is not capturing the temperature field or is unable to cool fast enough the conductance value can be edited in the `run_heatup.py` and `run_deformation.py` files. It is best to run this optimisation on just a few conditions in order to save time. 
-    2. Other parameters that may require optimisation include the `film_coeff` parameter founf in the run files and the friction coefficent between the sample and platens found in the CAE file. 
+    2. Other parameters that may require optimisation include the `film_coeff` parameter found in the step files and the friction coefficent between the sample and platens found in the CAE file. 
 
 7. **Executing the model:**
     1. Once the previous steps have been completed the model should be ready to run. The program has the following steps:
@@ -77,7 +78,7 @@ average behaviour. This is done via a binning method in strain  which combines a
   * T0    - The temperature at the middle thermocouple / Degrees C
   * T4    - The temperature at the off centre thermocouple at 4 mm from the centre / degrees C
 
-## Functions and definitions
+## Functions 
 ### Main functions
 * `run_deformation.py`
 * `run_heatup.py`
