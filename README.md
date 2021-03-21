@@ -1,5 +1,7 @@
 # dilatometer_modelling_and_constitutive_behaviour
 
+Created with work via Inigo Howe, Patryk Jedrasiak, Hugh Shercliff
+
 This program contains a method of testing various constitutive models and extracting the constitutive behaviour of dilatometer samples correcting for inhomogeneities in termperature, strain and strain rate. The model is currently configured to a dilatometer run under vacuum, with no active cooling during the deformation for a sample of length 10mm with a diameter of 5mm. For both heatup and deformation the temperature is fitted to the experimental central themocoupole temperature for any general temperature profile. The output then allows the dilatometer behaviour to be corrected to compensate for the inhomogeneities via the method set out in the following paper that can be found [here](https://www.sciencedirect.com/science/article/pii/S1005030220309257). If you have any issues or questions please feel free to contact me via email at ih345@cam.ac.uk.
 
 ## Intallation
