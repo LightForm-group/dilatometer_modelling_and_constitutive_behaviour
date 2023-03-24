@@ -200,7 +200,8 @@ for Temp in Temps_nominal:
                     endStep=None, endIncrement=None, interpolate=OFF, 
                     absoluteExteriorTolerance=0.0, exteriorTolerance=0.05)                     
             else:
-                pass
+                mdb.models['Model-1'].predefinedFields['temperature_field'].suppress()
+                mdb.models['Model-1'].predefinedFields['room_temp'].resume()   
             
             
             # Update step time

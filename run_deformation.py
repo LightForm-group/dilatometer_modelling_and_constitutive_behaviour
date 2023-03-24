@@ -4,35 +4,26 @@ from functions.plot_output import plot_output
 from functions.extract_experimental_constitutive_data import extract_experimental_constitutive_data
 import os
 
+#%% Setup
+
+# This is the script for using the experimental data
 # This must be adjusted to the filepath that is used
 # This has a CHAR lmit due to ABAQUS
-filepath = 'C:/temp/full_pipeline/'
+filepath = 'C:/Temp/github version/'
 
 ### Set the conditions and some parameters
 # Conditions matrix - input all the nominal strain rates and tempratures used
-nominal_strain_rates  = [0.1]   # per second
+nominal_strain_rates  = [1]   # per second
 nominal_temps         = [520]   # degrees C
 
 # These are for the output of the model, refine the strain step for a higher
 # resolution iutput in the model.
-max_strain  = 0.5 # largest true strain
-strain_step = 0.1 # true strain values at which output will be generated
+max_strain  = 0.1 # largest true strain
+strain_step = 0.05 # true strain values at which output will be generated
 
 # Conductance, This is a key parameter and may need adjusting to fit the 
 # temperature field, this value was correct for Al6082.50
 conductance = 10000.0
-
-# Modified Sellars Tegart parameters for the equation in the form
-# sigma = sigmaR*(arcsinh(strain_rate*exp(Q/(R*T))/A)) + sigmaP
-# To modify the constitutive law edit the constitutive_law.py file the number of 
-# inputs can be varied however the equation is currenty set up to be strain 
-# independant. 
-Q       = 1.65e5
-A       = 7.00e8
-n       = 5.0
-sigma_R = 20
-sigma_P = 5
-constitutive_inputs = [Q,A,n,sigma_R,sigma_P]
 
 # Sample information - The model mesh is currently set up with these parameters
 # so these cannot be changed. 
@@ -40,27 +31,30 @@ sample_length = 10*10**(-3) # m
 sample_radius = 2.5*10**(-3) # m
 
 # Produce the input files with the experimental data
-use_custom_inputs = 0 # Set to 1 to use custom inputs
+generate_time_temps = 1
+generate_plasticity_data = 0 # this requires a matrix of 3x3 conditions minimum
 generate_deformation_input(filepath,nominal_strain_rates,nominal_temps,
-                           sample_length,sample_radius,max_strain,strain_step,
-                           use_custom_inputs)
+                               sample_length,sample_radius,max_strain,strain_step,
+                               generate_time_temps,generate_plasticity_data)
+
 
 # Write the values to a text file to be excecuted when running the code in Abaqus
-nominal_temps_str        = map(str, nominal_temps)
-nominal_strain_rates_str = map(str, nominal_strain_rates)
-generate_setup(constitutive_inputs,nominal_temps_str,
-               nominal_strain_rates_str,conductance)
+generate_setup(nominal_temps,nominal_strain_rates,conductance)
+
+#%% Run the model
 
 # Run the deformation model 
 os.system('call abaqus cae nogui=deformation_step.py')
     
+#%% Processing - incomplete
+
 # Plot the output
 # This will generate plots from the experiment and the output of the model to compare to of:
 # - The central thermocouple temperature vs time
 # - The secondary thermocouple temperature vs time
 # - The stress-strain curve
-plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,
-            max_strain,sample_length,sample_radius)
+#plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,
+#            max_strain,sample_length,sample_radius)
 
 # Extract Constitutive data
 # It is assumed that for the experimental data the effects of assumptions about 
@@ -79,5 +73,4 @@ plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,
 # This is then used to return the constitutive data. 
 # This will then be written to a text file in plots comparisons between this equation
 # and the points used to fit the equation are also plotted.
-extract_experimental_constitutive_data(filepath,nominal_temps,nominal_strain_rates,constitutive_inputs)
-
+#extract_experimental_constitutive_data(filepath,nominal_temps,nominal_strain_rates,constitutive_inputs)

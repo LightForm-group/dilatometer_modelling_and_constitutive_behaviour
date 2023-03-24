@@ -1,11 +1,11 @@
-def generate_setup(constitutive_inputs,nominal_temps,nominal_strain_rates,conductance):
+def generate_setup(nominal_temps,nominal_strain_rates,conductance):
+    
+    # Convert the files to strings
+    nominal_temps        = map(str, nominal_temps)
+    nominal_strain_rates = map(str, nominal_strain_rates)
     
     with open('deformation_step/deformation_input/conductance.txt', 'w') as f:
         f.write("%f" % conductance)
-    
-    with open('deformation_step/deformation_input/constitutive_inputs.txt', 'w') as f:
-        for value in constitutive_inputs:
-            f.write("%f\n" % value)
             
     with open('deformation_step/deformation_input/temps_values.txt', 'w') as f:
         for temp in nominal_temps:

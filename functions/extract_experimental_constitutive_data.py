@@ -54,7 +54,7 @@ def extract_experimental_constitutive_data(filepath,nominal_temps,nominal_strain
     for temp in nominal_temps:
         for rate in nominal_strain_rates:
             # extract model data
-            model_data = extract_model_output(filepath,temp,rate)
+            model_data = extract_model_output(filepath,str(temp),str(rate))
             
             if rate == '01':
                 rate_value = 0.1
@@ -120,8 +120,7 @@ def extract_experimental_constitutive_data(filepath,nominal_temps,nominal_strain
     
     # The stress is set to be constant at values larger than the greatest temp 
     # and strain rate experimentally found.
-    log_stress = log_stress_eqn(temp,rate,surface_fit_strain)
-    return log_stress
+    #log_stress = log_stress_eqn(temp,rate,surface_fit_strain)
 
     fig, ax = plt.subplots(1,1,figsize=(5, 5))
     for rate in nominal_strain_rates:
@@ -143,7 +142,7 @@ def extract_experimental_constitutive_data(filepath,nominal_temps,nominal_strain
         ax.legend(title='Nominal strain rate',frameon=False,loc=4)
     
     # Make a plot using all data
-    plot.savefig(filepath+'plots/statistical_fit_vs_corrected_exp.png',bbox_inches='tight')
+    fig.savefig(filepath+'plots/statistical_fit_vs_corrected_exp.png',bbox_inches='tight')
     
     # Close all the generated figures
     plt.close('all')
@@ -165,7 +164,7 @@ def extract_experimental_constitutive_data(filepath,nominal_temps,nominal_strain
                 if log_rate == 0:
                     log_rate = -4
                     zero = 1
-                plasticity_data[count,0] = 10**(surface_fit(strain,10**(log_rate),temp))*10**6
+                plasticity_data[count,0] = 10**(surface_fit(strain,10**(log_rate),temp,surface_fit_values))*10**6
                 plasticity_data[count,1] = strain
                 if zero == 1:
                     plasticity_data[count,2] = 0

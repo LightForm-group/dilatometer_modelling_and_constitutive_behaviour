@@ -25,7 +25,6 @@ from abaqusConstants import *
 import shutil
 import numpy as np
 import datetime
-from functions.constitutive_law import Constitutive_law
 
 # This program was adapted from work by Patryk Jedrasiak, Engineering Department, University of Cambridge
 # If you want to use it in your work please include a reference to the origional paper. 
@@ -37,50 +36,6 @@ def write_output(variable,variable_name):
               's-1_output.txt', "a") as myfile:
         myfile.write(variable)
         
-#def Constitutive_law(Q,A,n,SigmaP,SigmaR,Temp,Rate):
-#    R = 8.31
-#    Temp = Temp + 273 # convert to Kelvin
-#    z = Rate*np.exp(Q/(R*Temp))
-#    yield_stress = 1e6*(SigmaR*np.arcsinh((z/A)**(1.0/n)) + SigmaP)
-#    return yield_stress
-
-def generate_platic_data(constitutive_inputs,min_T,max_T,min_rate,max_rate):
- 
-    # set ranges of temp and rate
-    Temp = np.arange(min_T-100,max_T+100.0,5.0)
-    Temp_step_no = Temp.size;
-    
-    # Model is meant to work between 10000 and 0.001
-    log_rate = np.arange(np.log10(min_rate)-2,np.log10(max_rate)+2,0.2)
-    log_rate_step_number = log_rate.size;
-    
-    # Initalise data table
-    Material_data = np.zeros((Temp_step_no*log_rate_step_number+Temp_step_no,4))
-    count = 0
-    
-    # estimate the static stress for each temp
-    for i in range(Temp_step_no):
-        # Abaqus requires a set for a rate of zero, for this set the values to 
-        # be the same as whenthe rate is at some minimum in this case 10^(-5)
-        # fit a linear function to two values and extrapolate from rate = 0.01
-        # and 0.02 so as to have values for zero strain rate
-        min_rate = 10**-5
-        Material_data[count,0] = Constitutive_law(constitutive_inputs,Temp[i],min_rate) # yield stress, Pa
-        Material_data[count,1] = 0  # % strain
-        Material_data[count,2] = 0 # strain rate, s-1
-        Material_data[count,3] = Temp[i] #% temp, K
-        count = count + 1;  
-        
-    for j in range(log_rate_step_number):
-        for i in range(Temp_step_no):
-            Material_data[count,0] = Constitutive_law(constitutive_inputs,Temp[i],10**(log_rate[j])) # yield stress, Pa
-            Material_data[count,1] = 0 # strain
-            Material_data[count,2] = 10**(log_rate[j]) # strain rate, s-1
-            Material_data[count,3] = Temp[i] # temp, K
-            count = count + 1;
-            
-    return Material_data
-        
 # Program definitions
 cae_filename        = 'dilatometer_model.cae'
 Target_error        = 0.5 # In degrees C
@@ -89,7 +44,7 @@ film_coeff          = 0 # Edit this to include losses to air. 33 is a reasonable
 
 # If running this code from the Abaqus PDE this must be set explicitly
 filepath = os.path.dirname(os.path.abspath('run_deformation.py')) + '/'
-#filepath = 'C:/temp/full_pipeline/'
+filepath = 'C:/Temp/github version/'
 
 # Find the final heatup odb which will be used as the temperature field input in the first step
 heatup_odb_location = filepath+'heat_up_step/final_heatup_odb/'
@@ -106,23 +61,13 @@ Temps_nominal = [x.strip() for x in data]
 with open (filepath+'deformation_step/deformation_input/strains_values.txt', 'r') as myfile:
     data=myfile.readlines()
 Strain_rates_nominal = [x.strip() for x in data] 
-    
-constitutive_inputs = []
-with open (filepath+'deformation_step/deformation_input/constitutive_inputs.txt', 'r') as myfile:
-    data=myfile.readlines()
-data = map(lambda s: s.strip(), data)
-for k in range(0,len(data)):
-    constitutive_inputs.append(float(data[k]))
 
 # Generate float versions of the condition inputs
 temps_numeric = map(float, Temps_nominal)
 rates_numeric = map(float, Strain_rates_nominal)
 
 # Generate the plasticity data from the Sellars Tegart 
-plasticity_values = generate_platic_data(constitutive_inputs,min(temps_numeric),
-                                         max(temps_numeric),min(rates_numeric),
-                                         max(rates_numeric))
-
+plasticity_values = np.loadtxt(filepath + 'deformation_step/deformation_input/experimental_plasticity_data.txt')
 
 for Strain_rate_nominal in Strain_rates_nominal:
     for Temp_nominal in Temps_nominal:
@@ -135,8 +80,8 @@ for Strain_rate_nominal in Strain_rates_nominal:
 
         # Read in the power input from the output from the coarse fit
         P_guess = []
-        with open (filepath + 'deformation_step/deformation_input/' + 'P_' + Temp_nominal + 'C_' + 
-                   Strain_rate_nominal + 's-1.txt', 'r') as myfile:
+        with open (filepath + 'deformation_step/deformation_input/' + 'P_' + Temp_nominal + '_' + 
+                   Strain_rate_nominal + '.txt', 'r') as myfile:
             data=myfile.readlines()
         data = map(lambda s: s.strip(), data)
         for k in range(0,len(data)):
@@ -159,7 +104,7 @@ for Strain_rate_nominal in Strain_rates_nominal:
 
         # This reads time points at which displacments are specified, fixed displacment increment, time changes in a non-linear fashion
         time = []
-        with open (filepath + 'deformation_step/deformation_input/' + 't_' + Temp_nominal + 'C_' + Strain_rate_nominal +'s-1.txt', 'r') as myfile:
+        with open (filepath + 'deformation_step/deformation_input/' + 't_' + Temp_nominal + '_' + Strain_rate_nominal +'.txt', 'r') as myfile:
             data=myfile.readlines()
         data = map(lambda s: s.strip(), data)
         for k in range(0,len(data)):
@@ -200,7 +145,7 @@ for Strain_rate_nominal in Strain_rates_nominal:
         for J in range(1,len(Disp_hist)):
             
             # Set the time increment to define the rectangular profile between two time points
-            time_increment = (time[J+1]-time[J])/5
+            time_increment = (time[1]-time[0])/5
             
             # use 2J to jump between steps as P_hist includes two rows for each time step 
             # in order to define the square profile 
@@ -211,7 +156,7 @@ for Strain_rate_nominal in Strain_rates_nominal:
             Power_J = 1000.0
 
 			# Read experimental temperature
-            with open (filepath + 'deformation_step/deformation_input/Temp_' + Temp_nominal + 'C_' + Strain_rate_nominal +'s-1.txt', 'r') as myfile:
+            with open (filepath + 'deformation_step/deformation_input/Temp_' + Temp_nominal + '_' + Strain_rate_nominal +'.txt', 'r') as myfile:
                 data=myfile.readlines()
             data = map(lambda s: s.strip(), data)
             T_exp = float(data[J])
@@ -318,6 +263,8 @@ for Strain_rate_nominal in Strain_rates_nominal:
 				# Set amplitude
                 mdb.models['Model-1'].amplitudes['displacment'].setValues(timeSpan=STEP,
 						 smooth=SOLVER_DEFAULT, data=(Disp_hist))
+                
+                # Turn on the right temperatureature field
 						 
 				# Set initial temperature field     
                 mdb.models['Model-1'].predefinedFields['temperature_field'].setValues(

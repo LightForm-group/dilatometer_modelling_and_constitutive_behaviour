@@ -4,7 +4,7 @@ import shutil
 
 # For this Section you have to create three text files for the input
 # Power - This is a list of numbers that will be adjusted by the model and can 
-#         be any non zero value (commonly arounf 1e8)
+#         be any non zero value (commonly around 1e8)
 # Temp  - A list of the target temperatures for each time in degrees C
 # times - A list of the times at which the power will be fitted to match the 
 #         desired temperatures
@@ -15,14 +15,14 @@ import shutil
 # These must be placed in the heat_up_step/heatup_input/ folder
 
 # Find absolute filepaths
-filepath = 'C:/temp/full_pipeline/'
+filepath = 'C:/Temp/6110 Run/'
 
 # Conductance, This is a key parameter and may need adjusting to fit the 
 # temperature field, this value was correct for Al6082.50
 conductance = 1500.0
 
 # Parameters
-nom_temp_list = [520]
+nom_temp_list = [490,520,560]
 
 # Produce the input files with the experimental data
 generate_heatup_input(filepath,nom_temp_list,conductance)

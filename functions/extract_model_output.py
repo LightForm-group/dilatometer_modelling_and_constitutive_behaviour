@@ -15,8 +15,8 @@ def extract_model_output(filepath,temp,rate):
     try:
         # output in F, d, T0, T4, P, ALLPD, stress, strain
         deformation_output_location = filepath+'deformation_step/deformation_output/'
-        model_data_out = np.transpose(np.atleast_2d(np.loadtxt(deformation_output_location+'F_'+temp+'C_'+rate+'s-1_output.txt')))
-        outputs = ['d','T0','T4','P','ALLPD']
+        model_data_out = np.transpose(np.atleast_2d(np.loadtxt(deformation_output_location+'_F_'+temp+'C_'+rate+'s-1_output.txt')))
+        outputs = ['_d','_T0','_T4','_P','_ALLPD']
         for output in outputs:
             model_data_out= np.append(model_data_out,np.transpose(np.atleast_2d((np.loadtxt(deformation_output_location+output+'_'+temp+'C_'+
                                                                                             rate+'s-1_output.txt')))), axis=1)

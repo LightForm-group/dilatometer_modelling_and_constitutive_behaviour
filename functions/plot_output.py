@@ -7,18 +7,18 @@ import pickle
 from functions.extract_model_output import extract_model_output
 
 def plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,max_strain,sample_length,sample_radius):
-    
+        
     # Set plot characteristics
     sns.set(style="white",font_scale=1.2)
     sns.set_palette('Accent')
-
+    
     # Load in experimental output
     # in both cases they have the following stucture stress, strain, strain rate, temp, nominal temp
     interpolated_exp_dataset = np.loadtxt(filepath+'experimental_data/experimental_ouput/experimental_output_interp_stack_temp.txt')
     full_exp_dataset         = np.loadtxt(filepath+'experimental_data/experimental_ouput/experimental_output_all_data.txt')
     
     # Handle the case where it is just one condition
-    if len(nominal_strain_rates) == 1 and len(nominal_temps) == 1:
+    if len(nominal_strain_rates) == 1 or len(nominal_temps) == 1:
         one_condition = True
     else:
         one_condition = False
@@ -29,8 +29,8 @@ def plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,max_stra
     sub_plot_x_axis = -1
     
     # Turn the lists into floats
-    nominal_strain_rates_float = map(float,nominal_strain_rates)
-    nominal_temps_float        = map(float,nominal_temps)
+    nominal_strain_rates_float = [float(x) for x in nominal_strain_rates]
+    nominal_temps_float        = [float(x) for x in nominal_temps]
     
     rate_count = 0 # count through to name some variables
     for rate in nominal_strain_rates_float:
@@ -59,18 +59,19 @@ def plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,max_stra
             
             ## select the experimental data
             # filter by temp
-            interpolated_exp_data = interpolated_exp_dataset[abs(interpolated_exp_dataset[:,3] - temp)<10**(-6),:] 
-            full_exp_data         = full_exp_dataset[abs(full_exp_dataset[:,4] - temp)<10**(-6),:]
+            interpolated_exp_data = interpolated_exp_dataset[abs(interpolated_exp_dataset[:,3] - temp)<10**(-3),:] 
+            full_exp_data         = full_exp_dataset[abs(full_exp_dataset[:,4] - temp)<10**(-3),:]
             
             #filter by strain
-            interpolated_exp_data = interpolated_exp_data[abs(interpolated_exp_data[:,2] - rate)<10**(-6),:]
-            full_exp_data = full_exp_data[abs(full_exp_data[:,2] - rate)<10**(-6),:]
+            interpolated_exp_data = interpolated_exp_data[abs(interpolated_exp_data[:,2] - rate)<10**(-3),:]
+            full_exp_data = full_exp_data[abs(full_exp_data[:,2] - rate)<10**(-3),:]
                 
             # Turn strains into times
             model_times = model_data[:,6]/rate
             max_time = (strain_step+max_strain)/rate
             
             ############### plotting stress strain curves
+            
             # Filter out the data so it's above 0.02 strain
             data_selected = full_exp_data[full_exp_data[:,1]>0.02]
             
@@ -78,24 +79,23 @@ def plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,max_stra
             exp_times = data_selected[:,1]/rate
             
             # Experimental
-            plot1 = sns.lineplot(x=data_selected[:,1],y=data_selected[:,0]*10**(-6),ax=ax1,
+            sns.lineplot(x=data_selected[:,1],y=data_selected[:,0]*10**(-6),ax=ax1,
                                  label = temp_name + '$^\circ$C, ' + rate_name + 's$^{-1}$ Experiment',linewidth = 2,zorder=2)
             # Add error bands
             lower_bound = (data_selected[:,0] - data_selected[:,5])*10**(-6)
             upper_bound = (data_selected[:,0] + data_selected[:,5])*10**(-6)
-            plot1.fill_between(data_selected[:,1], lower_bound, upper_bound, alpha=.9, color = [230/256,230/256,230/256],zorder=1)
+            ax1.fill_between(data_selected[:,1], lower_bound, upper_bound, alpha=.9, color = [230/256,230/256,230/256],zorder=1)
             
             # Model
-            plot1 = sns.scatterplot(x=model_data[:,6],y=model_data[:,7]*10**(-6),ax=ax1,
+            sns.scatterplot(x=model_data[:,6],y=model_data[:,7]*10**(-6),ax=ax1,
                                     label = temp_name + '$^\circ$C, ' + rate_name + 's$^{-1}$ Model',zorder=10)
             
-            plot1.set(xlabel='$\epsilon$', ylabel='$\sigma_{Notional\;True}$ / MPa')
-            plot1.set(xlim=(0, strain_step+max_strain))
-            plot1.set(ylim=(0, np.around(max(full_exp_dataset[:,0]*10**(-6))+20,-1)))
-            plot1.legend(frameon=True)
+            ax1.set(xlabel='$\epsilon$', ylabel='$\sigma_{Notional\;True}$ / MPa')
+            ax1.set(xlim=(0, strain_step+max_strain))
+            ax1.set(ylim=(0, np.around(max(full_exp_dataset[:,0]*10**(-6))+20,-1)))
             
             # Put a legend to the right side
-            plot1.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            ax1.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.,frameon=False)
             
             ######## plotting temp time curves
             
@@ -103,25 +103,24 @@ def plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,max_stra
             exp_times = full_exp_data[:,1]/rate
             
             # Experimental
-            plot2 = sns.lineplot(x=exp_times,y=full_exp_data[:,3],ax=ax2,
+            sns.lineplot(x=exp_times,y=full_exp_data[:,3],ax=ax2,
                                  label = temp_name + '$^\circ$C, ' + rate_name + 's$^{-1}$ Experiment',linewidth = 2,zorder=2)
             
             # Add error bands
             lower_bound = full_exp_data[:,3] - full_exp_data[:,8]
             upper_bound = full_exp_data[:,3] + full_exp_data[:,8]
-            plot2.fill_between(exp_times, lower_bound, upper_bound, alpha=.9, color = [230/256,230/256,230/256],zorder=1)
+            ax2.fill_between(exp_times, lower_bound, upper_bound, alpha=.9, color = [230/256,230/256,230/256],zorder=1)
              
             # Model
-            plot2 = sns.scatterplot(x=model_times,y=model_data[:,2],ax=ax2,
+            sns.scatterplot(x=model_times,y=model_data[:,2],ax=ax2,
                                     label = temp_name + '$^\circ$C, ' + rate_name + 's$^{-1}$ Model',zorder=10)
             
-            plot2.set(xlabel='t / s', ylabel='T (Centre) / $^\circ$C')
-            plot2.set(xlim=(0, max_time))
-            plot2.set(ylim=(np.around(min(full_exp_dataset[:,3])-20,-1), np.around(max(full_exp_dataset[:,3])+20,-1)))
-            plot2.legend(frameon=True)
+            ax2.set(xlabel='t / s', ylabel='T (Centre) / $^\circ$C')
+            ax2.set(xlim=(0, max_time))
+            ax2.set(ylim=(np.around(min(full_exp_dataset[:,3])-20,-1), np.around(max(full_exp_dataset[:,3])+20,-1)))
             
             # Put a legend to the right side
-            plot2.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            ax2.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.,frameon=False)
             
             ######### Plotting power
             # Adiabatic heating
@@ -131,10 +130,10 @@ def plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,max_stra
                 adiabatic_heating[i] = (model_data[i,5]-model_data[i-1,5])/model_times[1]
             
             if one_condition:
-                plot3 = sns.lineplot(x=model_times ,y=adiabatic_heating ,ax=ax3,
+                sns.lineplot(x=model_times ,y=adiabatic_heating ,ax=ax3[sub_plot_x_axis],
                               linewidth = 2,color = 'r') 
             else:
-                plot3 = sns.lineplot(x=model_times ,y=adiabatic_heating ,ax=ax3[sub_plot_y_axis,sub_plot_x_axis],
+                sns.lineplot(x=model_times ,y=adiabatic_heating ,ax=ax3[sub_plot_y_axis,sub_plot_x_axis],
                               linewidth = 2,color = 'r') 
             
             # induction Heating
@@ -142,10 +141,11 @@ def plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,max_stra
             induction_heating = model_data[:,4]*volume
             induction_times = model_times
             induction_times[1:] = model_times[1:] - model_times[1]/2
+            
             if one_condition:
-                plot3 = sns.lineplot(x=induction_times,y=induction_heating ,ax=ax3 ,drawstyle='steps-pre',
+                plot3 = sns.lineplot(x=induction_times,y=induction_heating ,ax=ax3[sub_plot_x_axis] ,drawstyle='steps-pre',
                              linewidth = 2,color = 'b')
-                ax3.set_title(temp_name + '$^\circ$C, ' + rate_name + 's$^{-1}$')
+                ax3[sub_plot_x_axis].set_title(temp_name + '$^\circ$C, ' + rate_name + 's$^{-1}$')
             else:
                 plot3 = sns.lineplot(x=induction_times,y=induction_heating ,ax=ax3[sub_plot_y_axis,sub_plot_x_axis] ,drawstyle='steps-pre',
                              linewidth = 2,color = 'b')
@@ -158,8 +158,9 @@ def plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,max_stra
             
         # Save figures to the figure output folder as pngs
         figure_save_location = filepath + 'plots/'
-        fig1.savefig(figure_save_location+'deformation_stress_strain_'+rate_name+'s-1.png', bbox_inches='tight')
-        fig2.savefig(figure_save_location+'deformation_T0_'+rate_name+'s-1.png', bbox_inches='tight')
+        fig1.savefig(figure_save_location+'deformation_stress_strain_'+rate_name+'s-1.png', bbox_inches='tight', format="png")
+        fig2.savefig(figure_save_location+'deformation_T0_'+rate_name+'s-1.png', bbox_inches='tight', format="png")
+        
         
         # Save figures as pickles so they can be quickly reloaded and edited
         pickle.dump(fig1, open(figure_save_location+'deformation_stress_strain_'+rate_name+'s-1'+'.fig.pickle', 'wb'))
@@ -169,8 +170,8 @@ def plot_output(filepath,nominal_temps,nominal_strain_rates,strain_step,max_stra
     adiabatic_patch = mpatches.Patch(facecolor='r')
     induction_patch = mpatches.Patch(facecolor='b')
     fig3.legend(handles = [adiabatic_patch,induction_patch],labels=labels,loc=1,
-                borderaxespad=0.05,bbox_to_anchor=(0.85, 0.85))
-    fig3.savefig(figure_save_location+'deformation_powers.png', bbox_inches='tight')
+                borderaxespad=0.05,bbox_to_anchor=(0.85, 0.85),frameon=False)
+    fig3.savefig(figure_save_location+'deformation_powers.png', bbox_inches='tight', format="png")
     pickle.dump(fig3, open(figure_save_location+'deformation_powers.png'+'.fig.pickle', 'wb'))
         
     #Close all figures
